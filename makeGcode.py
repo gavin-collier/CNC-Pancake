@@ -1,5 +1,6 @@
 from PIL import Image
 from tkinter.messagebox import showinfo
+import os
 
 def generate_Gcode(img_name):
     # Open the image file
@@ -62,6 +63,8 @@ def generate_Gcode(img_name):
                 gcode.append(f"N{(gcodeItterations * 10) + 100} X{pos_x:.3f} Y{pos_y:.3f}")
 
     # Save the G-code commands to a file
+    if os.path.exists(f"{img_name}BLACK.gcode"):
+        os.remove(f"{img_name}BLACK.gcode")
     with open(f"{img_name}BLACK.gcode", 'w') as f:
         f.write('\n'.join(gcode))
 
@@ -102,6 +105,8 @@ def generate_Gcode(img_name):
                 gcode.append(f"N{(gcodeItterations * 10) + 100} X{pos_x:.3f} Y{pos_y:.3f}")
 
     # Save the G-code commands to a file
+    if os.path.exists(f"{img_name}GRAY.gcode"):
+        os.remove(f"{img_name}GRAY.gcode")
     with open(f"{img_name}GRAY.gcode", 'w') as f:
         f.write('\n'.join(gcode))
 
