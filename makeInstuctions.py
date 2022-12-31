@@ -31,7 +31,13 @@ def passFilter(image, OrigenX, OrigenY, grade, size):
     else:
         return False
 
-def makeInstuctions(img_name, widthAjust, heightAjust, inputColor):
+def isEdge(image, OrigenX, OrigenY, color):
+    if image.getpixel((OrigenX + 1, OrigenY)) == color and image.getpixel((OrigenX, OrigenY + 1)) == color and image.getpixel((OrigenX - 1, OrigenY)) == color and image.getpixel((OrigenX, OrigenY - 1)) == color:
+        return False
+    else:
+        return True
+
+def makeInstuctions(img_name, widthAjust, heightAjust, inputColor, edge):
     #Convert color to rgb
     color = (0,0,0)
 
@@ -59,13 +65,13 @@ def makeInstuctions(img_name, widthAjust, heightAjust, inputColor):
     gcode.append("%")
     gcodeItterations = 1
 
-    for y in range(height):
-        for x in range(width):
+    for x in range(width):
+        for y in range(height):
             pixel = image.getpixel((x, y))
             #Check if the pixel is the correct color
-            if pixel == color:
+            if pixel == color and (isEdge(image, x, y, color) or not edge):
                 #Apply a low grade filter to see if it is surrounded by other pixels of the same color
-                if (passFilter(image, x, y, 12, 24)):
+                if (passFilter(image, x, y, 30, 48)):
                     #Apply location correction
                     gcodeItterations += 1
                     pos_x = x * px_size_x
